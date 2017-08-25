@@ -1,10 +1,9 @@
-import createBrowserHistory from 'history/createBrowserHistory'
+import createBrowserHistory from "history/createBrowserHistory";
 
 let appHistory = createBrowserHistory();
 
-appHistory.goTo = function(url)
-{
+appHistory.goTo = (url) => {
     appHistory.replace(url);
 };
 
-export default appHistory
+export default appHistory;

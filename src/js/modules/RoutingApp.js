@@ -1,27 +1,22 @@
-import Provider from 'react-redux/lib/components/Provider';
-import React, { Component } from 'react';
-import Route from 'react-router-dom/Route';
-import appHistory from 'tools/appHistory';
-import MainApp from './core/components/MainApp';
-import ConnectedRouter from 'react-router-redux/ConnectedRouter';
-import store from '../store';
+import Provider from "react-redux/lib/components/Provider";
+import React from "react";
+import { Switch, Route } from "react-router-dom";
+import appHistory from "tools/appHistory";
+import ConnectedRouter from "react-router-redux/ConnectedRouter";
+import store from "../store";
 
+import HomePage from "./core/components/HomePage";
 
-class RoutingApp extends Component
-{
-    render ()
-    {
-        return (
-            <Provider store={ store }>
-                <ConnectedRouter history={ appHistory }>
-                    <Route
-                        exact path='/'
-                        component={ MainApp }
-                    />
-                </ConnectedRouter>
-            </Provider>
-            );
-    }
+const RoutingApp = ({}) => {
+  return (
+    <Provider store={ store }>
+      <ConnectedRouter history={ appHistory }>
+        <Switch>
+          <Route exact path='/' component={ HomePage }/>
+        </Switch>
+      </ConnectedRouter>
+    </Provider>
+  );
 }
 
-export default RoutingApp
+export default RoutingApp;
