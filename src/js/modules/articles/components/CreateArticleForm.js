@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { Field, reduxForm } from "redux-form";
 
+import { getSectionsSelectOptions } from "../../sections/selectors";
 import { getUsersSelectOptions } from "../../users/selectors";
 
 import {
@@ -18,29 +19,25 @@ const validate = values => {
   if (!values.content) {
     errors.content = 'Required';
   }
+  if (!values.issue) {
+    errors.issue = 'Required';
+  }
+  if (!values.volume) {
+    errors.volume = 'Required';
+  }
   return errors;
 };
 
 const CreateArticleForm = ({
                              handleSubmit,
                              usersSelectOptions,
-                             values,
+                             sectionsSelectOptions,
                              pristine,
                              reset,
                              submitting,
                            }) => {
   return (
     <form onSubmit={ handleSubmit }>
-      <div>
-        {
-          values && (
-            Object.keys(values).map((valueName, index) => {
-              return <p
-                key={ index }>{ `${valueName}: ${ values[ valueName ] }` }</p>
-            })
-          )
-        }
-      </div>
       <table>
         <tbody>
         <tr>
@@ -53,13 +50,33 @@ const CreateArticleForm = ({
         <tr>
           <td>Users</td>
           <td>
-            <Field name="users" options={ usersSelectOptions } component={ renderDropdown } multi/>
+            <Field name="users" options={ usersSelectOptions }
+                   component={ renderDropdown } multi/>
+          </td>
+        </tr>
+        <tr>
+          <td>Section</td>
+          <td>
+            <Field name="sections" options={ sectionsSelectOptions }
+                   component={ renderDropdown }/>
           </td>
         </tr>
         <tr>
           <td>Content</td>
           <td>
             <Field name="content" component={ renderTextArea } label="Content"/>
+          </td>
+        </tr>
+        <tr>
+          <td>Issue</td>
+          <td>
+            <Field name="issue" type="number" component={ renderTextArea } label="Issue"/>
+          </td>
+        </tr>
+        <tr>
+          <td>Volume</td>
+          <td>
+            <Field name="volume" type="number" component={ renderTextArea } label="Volume"/>
           </td>
         </tr>
         </tbody>
@@ -78,6 +95,7 @@ const CreateArticleForm = ({
 };
 
 const mapStateToProps = state => ({
+  sectionsSelectOptions: getSectionsSelectOptions(state),
   usersSelectOptions: getUsersSelectOptions(state),
   values: state.form.createArticle.values,
 })

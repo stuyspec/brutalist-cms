@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { createArticle } from "../actions";
 import CreateArticleForm from "./CreateArticleForm";
 
-const CreateArticlePage = ({}) => {
+const CreateArticlePage = ({ createArticle }) => {
   const handleSubmit = values => {
     createArticle( values );
   };
@@ -13,7 +13,7 @@ const CreateArticlePage = ({}) => {
   return (
     <div>
       <h3>Create an Article</h3>
-      <CreateArticleForm handleSubmit={ handleSubmit }/>
+      <CreateArticleForm onSubmit={ handleSubmit }/>
     </div>
   )
 };

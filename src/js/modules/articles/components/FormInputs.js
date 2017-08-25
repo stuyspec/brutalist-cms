@@ -31,7 +31,7 @@ export const renderTextArea = ({ input, label, meta: { touched, error } }) => {
   );
 };
 
-export const renderDropdown = ({ input, options, name }) => (
+export const renderDropdown = ({ input, options, name, multi }) => (
   <Select
     { ...input }
     name={ name }
@@ -39,7 +39,7 @@ export const renderDropdown = ({ input, options, name }) => (
     value={ input.value }
     onChange={ (value) => input.onChange(value) }
     onBlur={ () => input.onBlur(input.value) }
-    multi={ true }
+    multi={ multi }
     clearable={ false }
   />
 )
