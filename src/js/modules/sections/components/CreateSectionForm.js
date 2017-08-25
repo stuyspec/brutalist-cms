@@ -1,7 +1,9 @@
 import React from "react";
+import { connect } from "react-redux";
 import { Field, reduxForm } from "redux-form";
 
-import { renderInput } from "./FormInputs";
+import { renderInput, renderDropdown } from "./FormInputs";
+import { getSectionsSelectOptions } from "../selectors";
 
 const validate = values => {
   const errors = {}
@@ -15,6 +17,7 @@ const validate = values => {
 
 const CreateSectionForm = ({
                              handleSubmit,
+                             sectionsSelectOptions,
                              pristine,
                              reset,
                              submitting,
@@ -37,6 +40,13 @@ const CreateSectionForm = ({
                    label="Description"/>
           </td>
         </tr>
+        <tr>
+          <td>Parent Section (if applicable)</td>
+          <td>
+            <Field name="parentId" options={ sectionsSelectOptions }
+                   component={ renderDropdown }/>
+          </td>
+        </tr>
         </tbody>
       </table>
       <div>
@@ -52,7 +62,11 @@ const CreateSectionForm = ({
   );
 };
 
+const mapStateToProps = state => ({
+  sectionsSelectOptions: getSectionsSelectOptions(state),
+})
+
 export default reduxForm({
   form: 'createSection',
   validate,
-})(CreateSectionForm);
+})(connect(mapStateToProps)(CreateSectionForm));

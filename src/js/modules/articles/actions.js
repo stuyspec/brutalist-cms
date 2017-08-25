@@ -1,15 +1,15 @@
 import axios from "axios";
-import { STUY_SPEC_API_URL, STUY_SPEC_API_HEADER } from "../../constants";
+import { STUY_SPEC_API_URL, STUY_SPEC_API_HEADERS } from "../../constants";
 import * as t from "./actionTypes";
 
 export const fetchArticles = () => {
   return dispatch => {
     dispatch({ type: t.FETCH_ARTICLES_PENDING });
-    axios.get(`${STUY_SPEC_API_URL}/articles`, STUY_SPEC_API_HEADER)
+    axios.get(`${STUY_SPEC_API_URL}/articles`, STUY_SPEC_API_HEADERS)
       .then(response => {
         dispatch({
           type: t.FETCH_ARTICLES_FULFILLED,
-          payload: response,
+          payload: response.data,
         });
       })
       .catch(err => {
@@ -22,10 +22,21 @@ export const fetchArticles = () => {
 };
 
 export const createArticle = values => {
-  values.section = values.section.value;
   return dispatch => {
-    dispatch({ type: t.CREATE_ARTICLE_PENDING });
-    axios.post(`${STUY_SPEC_API_URL}/articles`, values, STUY_SPEC_API_HEADER)
+    dispatch({
+      type: t.CREATE_ARTICLE_PENDING,
+      payload: values,
+    });
+    values.section = values.section.value;
+    /* TODO: put this code in when section becomes section_id on Rails POST.
+     * values.sectionId = values.section.value;
+     * delete values.section;
+     */
+    axios.post(
+      `${STUY_SPEC_API_URL}/articles`,
+      values,
+      STUY_SPEC_API_HEADERS
+    )
       .then(response => {
         dispatch({
           type: t.CREATE_ARTICLE_FULFILLED,
