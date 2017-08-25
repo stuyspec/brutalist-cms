@@ -6,6 +6,7 @@ import ConnectedRouter from "react-router-redux/ConnectedRouter";
 import store from "../store";
 
 import HomePage from "./core/components/HomePage";
+import { CreateArticlePage } from "./articles/components";
 
 const RoutingApp = ({}) => {
   return (
@@ -13,6 +14,7 @@ const RoutingApp = ({}) => {
       <ConnectedRouter history={ appHistory }>
         <Switch>
           <Route exact path='/' component={ HomePage }/>
+          <Route exact path='/articles' component={ CreateArticlePage }/>
         </Switch>
       </ConnectedRouter>
     </Provider>
