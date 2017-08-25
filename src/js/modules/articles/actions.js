@@ -51,3 +51,7 @@ export const createArticle = values => {
       });
   };
 };
+
+export const deleteArticles = values => {
+
+}
