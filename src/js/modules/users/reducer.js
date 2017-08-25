@@ -25,6 +25,7 @@ const initialState = {
       slug: "cathy-cai",
     },
     3: {
+      id: 3,
       firstName: "Nicholas",
       lastName: "Yang",
       username: "nicholasleeyang",
@@ -32,6 +33,7 @@ const initialState = {
       slug: "nicholas-yang",
     },
     4: {
+      id: 4,
       firstName: "Jerry",
       lastName: "Ye",
       username: "jye6",

@@ -1,4 +1,5 @@
 import React from "react";
+import Select from "react-select";
 
 export const renderInput = ({ input, label, type, meta: { touched, error } }) => {
   return (
@@ -30,23 +31,15 @@ export const renderTextArea = ({ input, label, meta: { touched, error } }) => {
   );
 };
 
-export const renderDropdown = ({ input, label, data, meta: { touched, error } }) => {
-  return (
-    <div>
-      <select { ...input } placeholder={ label }>
-        {
-          data.map(object => {
-            return <option key={ object.id } value={ object.name }>{ object.name }</option>;
-          })
-        }
-      </select>
-      {
-        touched && error && (
-          <span>
-            { error }
-          </span>
-        )
-      }
-    </div>
-  );
-};
+export const renderDropdown = ({ input, options, name }) => (
+  <Select
+    { ...input }
+    name={ name }
+    options={ options }
+    value={ input.value }
+    onChange={ (value) => input.onChange(value) }
+    onBlur={ () => input.onBlur(input.value) }
+    multi={ true }
+    clearable={ false }
+  />
+)

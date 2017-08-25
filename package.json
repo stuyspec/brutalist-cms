@@ -62,7 +62,9 @@
     "ejs": "^2.5.7",
     "envify": "^4.1.0",
     "express": "^4.15.4",
+    "react-select": "^1.0.0-rc.5",
     "redux-form": "^7.0.3",
+    "reselect": "^3.0.1",
     "yargs": "^8.0.2"
   }
 }

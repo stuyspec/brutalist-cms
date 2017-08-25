@@ -13,8 +13,8 @@ const RoutingApp = ({}) => {
     <Provider store={ store }>
       <ConnectedRouter history={ appHistory }>
         <Switch>
-          <Route exact path='/' component={ HomePage }/>
-          <Route exact path='/articles' component={ CreateArticlePage }/>
+          <Route exact path='/' component={ CreateArticlePage }/>
+          <Route exact path='/articles' component={ HomePage }/>
         </Switch>
       </ConnectedRouter>
     </Provider>

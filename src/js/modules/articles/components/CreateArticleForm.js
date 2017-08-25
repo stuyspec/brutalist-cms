@@ -2,10 +2,12 @@ import React from "react";
 import { connect } from "react-redux";
 import { Field, reduxForm } from "redux-form";
 
+import { getUsersSelectOptions } from "../../users/selectors";
+
 import {
   renderInput,
   renderTextArea,
-  renderDropdown
+  renderDropdown,
 } from "./FormInputs";
 
 const validate = values => {
@@ -19,29 +21,47 @@ const validate = values => {
   return errors;
 };
 
-const CreateArticleForm = ({ handleSubmit, sections, users, pristine, reset, submitting }) => {
+const CreateArticleForm = ({
+                             handleSubmit,
+                             usersSelectOptions,
+                             values,
+                             pristine,
+                             reset,
+                             submitting,
+                           }) => {
   return (
     <form onSubmit={ handleSubmit }>
+      <div>
+        {
+          values && (
+            Object.keys(values).map((valueName, index) => {
+              return <p
+                key={ index }>{ `${valueName}: ${ values[ valueName ] }` }</p>
+            })
+          )
+        }
+      </div>
       <table>
         <tbody>
-          <tr>
-            <td>Title</td>
-            <td>
-              <Field name="title" type="text" component={ renderInput } label="Title"/>
-            </td>
-          </tr>
-          <tr>
-            <td>Section</td>
-            <td>
-              <Field name="section" data={ Object.values(sections) } component={ renderDropdown } label="Section"/>
-            </td>
-          </tr>
-          <tr>
-            <td>Content</td>
-            <td>
-              <Field name="content" component={ renderTextArea } label="Content"/>
-            </td>
-          </tr>
+        <tr>
+          <td>Title</td>
+          <td>
+            <Field name="title" type="text" component={ renderInput }
+                   label="Title"/>
+          </td>
+        </tr>
+        <tr>
+          <td>Users</td>
+          <td>
+            <Field name="users" options={ usersSelectOptions } component={ renderDropdown } multi/>
+          </td>
+        </tr>
+        <tr>
+          <td>Content</td>
+          <td>
+            <Field name="content" component={ renderTextArea } label="Content"/>
+          </td>
+        </tr>
         </tbody>
       </table>
       <div>
@@ -58,8 +78,8 @@ const CreateArticleForm = ({ handleSubmit, sections, users, pristine, reset, sub
 };
 
 const mapStateToProps = state => ({
-  sections: state.sections.sections,
-  users: state.users.users,
+  usersSelectOptions: getUsersSelectOptions(state),
+  values: state.form.createArticle.values,
 })
 
 export default reduxForm({
