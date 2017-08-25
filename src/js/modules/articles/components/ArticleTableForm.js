@@ -2,10 +2,20 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Link } from "react-router-dom";
+import injectSheet from "react-jss";
 import { Field, reduxForm } from "redux-form";
 
 import { fetchArticles } from "../actions";
 import { fetchSections } from "../../sections/actions";
+
+const styles = {
+  tableBody: {
+    '& td:nth-child(n+3):nth-child(-n+5)': {
+      // selects all td after the third and before the fifth, inclusively.
+      width: '48px',
+    },
+  }
+};
 
 class ArticleTableForm extends Component {
   componentDidMount() {
@@ -16,6 +26,7 @@ class ArticleTableForm extends Component {
   render() {
     const {
       articles,
+      classes,
       handleSubmit,
       sections,
     } = this.props;
@@ -35,7 +46,7 @@ class ArticleTableForm extends Component {
             }
           </tr>
           </thead>
-          <tbody>
+          <tbody className={ classes.tableBody }>
           {
             Object.values(articles).map(article => {
               return (
@@ -99,6 +110,11 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators({ fetchArticles, fetchSections }, dispatch);
 };
 
+const SmartArticleTableForm = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(injectSheet(styles)(ArticleTableForm));
+
 export default reduxForm({
   form: 'articleTableForm',
-})(connect(mapStateToProps, mapDispatchToProps)(ArticleTableForm));
+})(SmartArticleTableForm);

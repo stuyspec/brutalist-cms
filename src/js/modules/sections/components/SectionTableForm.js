@@ -2,24 +2,28 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Link } from "react-router-dom";
+import injectSheet from "react-jss";
 import { Field, reduxForm } from "redux-form";
 
-import { fetchArticles } from "../actions";
-import { fetchSections } from "../../sections/actions";
+import { fetchSections } from "../actions";
 
-class ArticleTableForm extends Component {
+const styles = {
+  tableBody: {
+  }
+};
+
+class SectionTableForm extends Component {
   componentDidMount() {
     this.props.fetchSections();
-    this.props.fetchArticles();
   }
 
   render() {
     const {
-      articles,
+      classes,
       handleSubmit,
       sections,
     } = this.props;
-    const columns = [ 'title', 'volume', 'issue', 'isDraft', 'updatedAt', 'section' ];
+    const columns = [ 'name', 'description', 'slug' ];
     return (
       <form onSubmit={ handleSubmit }>
         <Field name="bulkAction" component="select">
@@ -35,48 +39,29 @@ class ArticleTableForm extends Component {
             }
           </tr>
           </thead>
-          <tbody>
+          <tbody className={ classes.tableBody }>
           {
-            Object.values(articles).map(article => {
+            Object.values(sections).map(section => {
               return (
-                <tr key={ article.id }>
+                <tr key={ section.id }>
                   <td key={ -1 }>
-                    <Field name={ article.id.toString() }
+                    <Field name={ section.id.toString() }
                            component="input"
                            type="checkbox"/>
                   </td>
                   {
                     columns.map((col, index) => {
-                      let content = article[ col ];
-                      if (col === 'title') {
-                        // articles are linked to the article page.
-                        content = (
-                          <Link to={ `/articles/${ article.id }` }>
-                            { article.title }
-                          </Link>
-                        );
-                      }
-                      else if (col === 'section') {
+                      if (col === 'name') {
                         // sections are linked to the section page.
-                        const section = sections[ article.sectionId ];
-                        content = (
-                          <Link to={ `/sections/${ section.id }` }>
-                            { section.name }
-                          </Link>
-                        );
-                      }
-                      else if (col === 'isDraft') {
-                        // if isDraft is true, articles have a green background.
                         return (
-                          <td key={ index }
-                              style={ {
-                                background: content ? 'green' : 'red'
-                              } }>
-                            { content }
+                          <td key={ index }>
+                            <Link to={ `/sections/${ section.id }` }>
+                              { section.name }
+                            </Link>
                           </td>
                         );
                       }
-                      return <td key={ index }>{ content }</td>;
+                      return <td key={ index }>{ section[ col ] }</td>;
                     })
                   }
                 </tr>
@@ -92,13 +77,17 @@ class ArticleTableForm extends Component {
 
 const mapStateToProps = state => ({
   sections: state.sections.sections,
-  articles: state.articles.articles,
 });
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ fetchArticles, fetchSections }, dispatch);
+  return bindActionCreators({ fetchSections }, dispatch);
 };
 
+const SmartSectionTableForm = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(injectSheet(styles)(SectionTableForm));
+
 export default reduxForm({
-  form: 'articleTableForm',
-})(connect(mapStateToProps, mapDispatchToProps)(ArticleTableForm));
+  form: 'sectionTableForm',
+})(SmartSectionTableForm);

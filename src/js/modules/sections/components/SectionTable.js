@@ -1,21 +1,16 @@
 import React from "react";
-import { connect } from "react-redux";
 
-import { TableForm } from "../../core/components";
+import SectionTableForm from "./SectionTableForm";
 
-const SectionTable = ({ sections }) => {
+const SectionTable = () => {
   const handleSubmit = values => {
     console.log(values);
   };
   return (
     <div>
-      <TableForm data={ sections } module="sections" onSubmit={ handleSubmit }/>
+      <SectionTableForm onSubmit={ handleSubmit }/>
     </div>
   );
 };
 
-const mapStateToProps = state => ({
-  sections: state.sections.sections,
-});
-
-export default connect(mapStateToProps)(SectionTable);
+export default SectionTable;
