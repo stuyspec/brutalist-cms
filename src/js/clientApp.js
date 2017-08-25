@@ -4,6 +4,8 @@ import ReactDOM from "react-dom";
 import { RoutingApp } from "./modules";
 import { AppContainer } from "react-hot-loader";
 import injectTapEventPlugin from "react-tap-event-plugin";
+import Provider from "react-redux/lib/components/Provider";
+import store from "./store";
 
 // for onClick events with MUI/React
 try {
@@ -18,6 +20,7 @@ console.log('appVersion ->', VERSION);
 
 ReactDOM.render((
   <AppContainer>
-    <RoutingApp/>
-  </AppContainer>), document.getElementById('app')
-);
+    <Provider store={ store }>
+      <RoutingApp/>
+    </Provider>
+  </AppContainer>), document.getElementById('app'));

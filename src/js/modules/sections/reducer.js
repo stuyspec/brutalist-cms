@@ -1,5 +1,9 @@
-const initialState = {
-  sections: {
+import {
+  FETCH_SECTIONS_FULFILLED
+} from "./actionTypes";
+
+/*
+
     0: {
       id: 0,
       name: "News",
@@ -128,11 +132,23 @@ const initialState = {
       parentId: 4,
       permalink: "/ae/books"
     },
-  }
+ */
+
+const initialState = {
+  sections: {}
 };
 
 export default reducer = (state = { ...initialState }, action) => {
   switch (action.type) {
+    case FETCH_SECTIONS_FULFILLED: {
+      return {
+        ...state,
+        sections: action.payload.reduce((acc, section) => {
+          acc[ section.id ] = section;
+          return acc;
+        }, {}),
+      };
+    }
     default:
       break;
   }

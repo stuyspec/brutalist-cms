@@ -57,7 +57,7 @@ const CreateArticleForm = ({
         <tr>
           <td>Section</td>
           <td>
-            <Field name="sections" options={ sectionsSelectOptions }
+            <Field name="section" options={ sectionsSelectOptions }
                    component={ renderDropdown }/>
           </td>
         </tr>
@@ -70,13 +70,13 @@ const CreateArticleForm = ({
         <tr>
           <td>Issue</td>
           <td>
-            <Field name="issue" type="number" component={ renderTextArea } label="Issue"/>
+            <Field name="issue" type="number" component={ renderInput } label="Issue"/>
           </td>
         </tr>
         <tr>
           <td>Volume</td>
           <td>
-            <Field name="volume" type="number" component={ renderTextArea } label="Volume"/>
+            <Field name="volume" type="number" component={ renderInput } label="Volume"/>
           </td>
         </tr>
         </tbody>
