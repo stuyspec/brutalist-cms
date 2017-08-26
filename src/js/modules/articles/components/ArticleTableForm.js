@@ -17,7 +17,7 @@ const styles = {
     '& td:nth-child(5), td:nth-child(6), td:nth-child(7)': {
       width: '48px',
     },
-    '& td:nth-child(8)': {
+    '& td:nth-child(4), td:nth-child(8)': {
       width: '194px',
     }
   }
@@ -25,6 +25,10 @@ const styles = {
 
 class ArticleTableForm extends Component {
   componentDidMount() {
+    this.refresh();
+  }
+
+  refresh = () => {
     this.props.fetchArticles();
     this.props.fetchAuthorships();
     this.props.fetchSections();
@@ -45,88 +49,94 @@ class ArticleTableForm extends Component {
     } = this.props;
     const columns = [ 'id', 'title', 'contributors', 'volume', 'issue', 'isDraft', 'updatedAt', 'section' ];
     return (
-      <form onSubmit={ handleSubmit }>
-        <Field name="bulkAction" component="select">
-          <option/>
-          <option value="delete">delete</option>
-        </Field>
-        <button type="submit" disabled={ pristine || submitting }>Submit</button>
-        <button type="button" disabled={ pristine || submitting } onClick={ reset }>
-          Clear Values
-        </button>
-        <table>
-          <thead>
-          <tr>
-            <th> </th>
+      <div>
+        <button onClick={ () => this.refresh() }>refresh</button>
+        <form onSubmit={ handleSubmit }>
+          <Field name="bulkAction" component="select">
+            <option/>
+            <option value="delete">delete</option>
+          </Field>
+          <button type="submit" disabled={ pristine || submitting }>Submit
+          </button>
+          <button type="button" disabled={ pristine || submitting }
+                  onClick={ reset }>
+            Clear Values
+          </button>
+          <table>
+            <thead>
+            <tr>
+              <th></th>
+              {
+                columns.map((col, index) => <th key={ index }>{ col }</th>)
+              }
+            </tr>
+            </thead>
+            <tbody className={ classes.tableBody }>
             {
-              columns.map((col, index) => <th key={ index }>{ col }</th>)
+              Object.values(articles).map(article => {
+                return (
+                  <tr key={ article.id } className={ classes.articleRow }>
+                    <td key={ -1 }>
+                      <Field name={ `articles.${article.slug}` }
+                             component="input"
+                             type="checkbox"/>
+                    </td>
+                    {
+                      columns.map((col, index) => {
+                        let content = article[ col ];
+                        if (col === 'title') {
+                          // articles are linked to the article page.
+                          content = (
+                            <Link to={ `/articles/${ article.id }` }>
+                              { article.title }
+                            </Link>
+                          );
+                        }
+                        else if (col === 'contributors') {
+                          content = [];
+                          authorships.map(authorship => {
+                            if (authorship.articleId === article.id) {
+                              const user = users[ authorship.userId ];
+                              content.push(
+                                <Link key={ user.id }
+                                      to={ `/users/${ user.id }` }>
+                                  { user.firstName } { user.lastName }
+                                </Link>
+                              );
+                            }
+                          });
+                        }
+                        else if (col === 'section') {
+                          // sections are linked to the section page.
+                          const section = sections[ article.sectionId ];
+                          content = (
+                            <Link to={ `/sections/${ section.id }` }>
+                              { section.name }
+                            </Link>
+                          );
+                        }
+                        else if (col === 'isDraft') {
+                          // if isDraft is true, articles have a green background.
+                          return (
+                            <td key={ index }
+                                style={ {
+                                  background: content ? 'green' : 'red'
+                                } }>
+                              { content }
+                            </td>
+                          );
+                        }
+                        return <td key={ index }>{ content }</td>;
+                      })
+                    }
+                  </tr>
+                );
+              })
             }
-          </tr>
-          </thead>
-          <tbody className={ classes.tableBody }>
-          {
-            Object.values(articles).map(article => {
-              return (
-                <tr key={ article.id } className={ classes.articleRow }>
-                  <td key={ -1 }>
-                    <Field name={ `articles.${article.slug}` }
-                           component="input"
-                           type="checkbox"/>
-                  </td>
-                  {
-                    columns.map((col, index) => {
-                      let content = article[ col ];
-                      if (col === 'title') {
-                        // articles are linked to the article page.
-                        content = (
-                          <Link to={ `/articles/${ article.id }` }>
-                            { article.title }
-                          </Link>
-                        );
-                      }
-                      else if (col === 'contributors') {
-                        content = [];
-                        authorships.map(authorship => {
-                          if (authorship.articleId === article.id) {
-                            const user = users[ authorship.userId ];
-                            content.push(
-                              <Link key={ user.id } to={ `/users/${ user.id }` }>
-                                { user.firstName } { user.lastName }
-                              </Link>
-                            );
-                          }
-                        });
-                      }
-                      else if (col === 'section') {
-                        // sections are linked to the section page.
-                        const section = sections[ article.sectionId ];
-                        content = (
-                          <Link to={ `/sections/${ section.id }` }>
-                            { section.name }
-                          </Link>
-                        );
-                      }
-                      else if (col === 'isDraft') {
-                        // if isDraft is true, articles have a green background.
-                        return (
-                          <td key={ index }
-                              style={ {
-                                background: content ? 'green' : 'red'
-                              } }>
-                            { content }
-                          </td>
-                        );
-                      }
-                      return <td key={ index }>{ content }</td>;
-                    })
-                  }
-                </tr>
-              );
-            })
-          }
-          </tbody>
-        </table>
-      </form>
+            </tbody>
+          </table>
+        </form>
+      </div>
     );
   }
 }

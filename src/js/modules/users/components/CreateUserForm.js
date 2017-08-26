@@ -1,4 +1,5 @@
 import React from "react";
+import { connect } from "react-redux";
 import { Field, reduxForm } from "redux-form";
 import injectSheet from "react-jss";
 
@@ -8,6 +9,11 @@ const styles = {
   errorMessage: {
     color: 'red',
   },
+  tableBody: {
+    '& tr td:first-child': {
+      width: '180px',
+    }
+  }
 };
 
 const validate = values => {
@@ -37,6 +43,7 @@ const validate = values => {
 
 const CreateUserForm = ({
                           classes,
+  errors,
                           handleSubmit,
                           pristine,
                           reset,
@@ -92,6 +99,13 @@ const CreateUserForm = ({
         </tbody>
       </table>
       <div>
+        {
+          errors.length > 0 && errors.map((error, index) => {
+            return <p className={ classes.errorMessage } key={ index }>error</p>;
+          })
+        }
+      </div>
+      <div>
         <button type="submit" disabled={ submitting }>
           Submit
         </button>
@@ -104,7 +118,15 @@ const CreateUserForm = ({
   );
 };
 
+const mapStateToProps = state => ({
+  errors: state.users.errors,
+});
+
+const SmartCreateUserForm = connect(
+  mapStateToProps
+)(injectSheet(styles)(CreateUserForm));
+
 export default reduxForm({
   form: 'createUser',
   validate,
-})(injectSheet(styles)(CreateUserForm));
+})(SmartCreateUserForm);

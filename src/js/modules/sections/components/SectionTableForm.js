@@ -8,13 +8,23 @@ import { Field, reduxForm } from "redux-form";
 import { fetchSections } from "../actions";
 
 const styles = {
-  tableBody: {
+  sectionRow: {
+    '& td:nth-child(1), td:nth-child(2)': {
+      width: '20px',
+    },
+    '& td:nth-child(3), td:nth-child(4)': {
+      width: '194px',
+    }
   }
 };
 
 class SectionTableForm extends Component {
   componentDidMount() {
-    this.props.fetchSections();
+    this.refresh();
+  }
+
+  refresh = () => {
+    this.props.fetchSection();
   }
 
   render() {
@@ -26,58 +36,63 @@ class SectionTableForm extends Component {
       sections,
       submitting,
     } = this.props;
-    const columns = [ 'name', 'description', 'slug' ];
+    const columns = [ 'id', 'name', 'slug', 'description' ];
     return (
-      <form onSubmit={ handleSubmit }>
-        <Field name="bulkAction" component="select">
-          <option/>
-          <option value="delete">delete</option>
-        </Field>
-        <button type="submit" disabled={ pristine || submitting }>Submit</button>
-        <button type="button" disabled={ pristine || submitting } onClick={ reset }>
-          Clear Values
-        </button>
-        <table>
-          <thead>
-          <tr>
-            <th> </th>
+      <div>
+        <button onClick={ () => refresh }>refresh</button>
+        <form onSubmit={ handleSubmit }>
+          <Field name="bulkAction" component="select">
+            <option/>
+            <option value="delete">delete</option>
+          </Field>
+          <button type="submit" disabled={ pristine || submitting }>Submit
+          </button>
+          <button type="button" disabled={ pristine || submitting }
+                  onClick={ reset }>
+            Clear Values
+          </button>
+          <table>
+            <thead>
+            <tr>
+              <th></th>
+              {
+                columns.map((col, index) => <th key={ index }>{ col }</th>)
+              }
+            </tr>
+            </thead>
+            <tbody className={ classes.tableBody }>
             {
-              columns.map((col, index) => <th key={ index }>{ col }</th>)
+              Object.values(sections).map(section => {
+                return (
+                  <tr key={ section.id } className={ classes.sectionRow }>
+                    <td key={ -1 }>
+                      <Field name={ `sections.${section.slug}` }
+                             component="input"
+                             type="checkbox"/>
+                    </td>
+                    {
+                      columns.map((col, index) => {
+                        if (col === 'name') {
+                          // sections are linked to the section page.
+                          return (
+                            <td key={ index }>
+                              <Link to={ `/sections/${ section.id }` }>
+                                { section.name }
+                              </Link>
+                            </td>
+                          );
+                        }
+                        return <td key={ index }>{ section[ col ] }</td>;
+                      })
+                    }
+                  </tr>
+                );
+              })
             }
-          </tr>
-          </thead>
-          <tbody className={ classes.tableBody }>
-          {
-            Object.values(sections).map(section => {
-              return (
-                <tr key={ section.id }>
-                  <td key={ -1 }>
-                    <Field name={ `sections.${section.slug}` }
-                           component="input"
-                           type="checkbox"/>
-                  </td>
-                  {
-                    columns.map((col, index) => {
-                      if (col === 'name') {
-                        // sections are linked to the section page.
-                        return (
-                          <td key={ index }>
-                            <Link to={ `/sections/${ section.id }` }>
-                              { section.name }
-                            </Link>
-                          </td>
-                        );
-                      }
-                      return <td key={ index }>{ section[ col ] }</td>;
-                    })
-                  }
-                </tr>
-              );
-            })
-          }
-          </tbody>
-        </table>
-      </form>
+            </tbody>
+          </table>
+        </form>
+      </div>
     );
   }
 }

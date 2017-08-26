@@ -2,6 +2,8 @@ import axios from "axios";
 import { STUY_SPEC_API_URL, STUY_SPEC_API_HEADERS } from "../../constants";
 import * as t from "./actionTypes";
 
+import { DELETE_USER_AUTHORSHIPS } from "../articles/actionTypes";
+
 export const fetchUsers = () => {
   return dispatch => {
     dispatch({ type: t.FETCH_USERS_PENDING });
@@ -29,10 +31,6 @@ export const createUser = values => {
     });
     axios.post(`${STUY_SPEC_API_URL}/auth/`, values, STUY_SPEC_API_HEADERS)
       .then(response => {
-        dispatch({
-          type: t.CREATE_USER_FULFILLED,
-          payload: response,
-        });
         const user = response.data.data;
         dispatch({
           type: t.UPDATE_USER_PENDING,
@@ -42,6 +40,10 @@ export const createUser = values => {
           .then(response => {
             dispatch({
               type: t.UPDATE_USER_FULFILLED,
+              payload: response,
+            });
+            dispatch({
+              type: t.CREATE_USER_FULFILLED,
               payload: response,
             });
           })
