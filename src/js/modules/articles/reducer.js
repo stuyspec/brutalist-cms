@@ -1,9 +1,11 @@
 import {
-  FETCH_ARTICLES_FULFILLED
+  FETCH_ARTICLES_FULFILLED,
+  FETCH_AUTHORSHIPS_FULFILLED,
 } from "./actionTypes";
 
 const initialState = {
   articles: {},
+  authorships: [],
 }
 
 export default reducer = (state = { ...initialState }, action) => {

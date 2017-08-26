@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import injectSheet from "react-jss";
 import { Field, reduxForm } from "redux-form";
 
-import { fetchArticles } from "../actions";
+import { fetchArticles, fetchAuthorships } from "../actions";
 import { fetchSections } from "../../sections/actions";
 
 const styles = {
@@ -27,6 +27,7 @@ class ArticleTableForm extends Component {
   componentDidMount() {
     this.props.fetchSections();
     this.props.fetchArticles();
+    this.props.fetchAuthorships();
   }
 
   render() {

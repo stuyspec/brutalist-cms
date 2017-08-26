@@ -21,6 +21,25 @@ export const fetchArticles = () => {
   };
 };
 
+export const fetchAuthorships = () => {
+  return dispatch => {
+    dispatch({ type: t.FETCH_AUTHORSHIPS_PENDING });
+    axios.get(`${STUY_SPEC_API_URL}/authorships`, STUY_SPEC_API_HEADERS)
+      .then(response => {
+        dispatch({
+          type: t.FETCH_AUTHORSHIPS_FULFILLED,
+          payload: response.data,
+        });
+      })
+      .catch(err => {
+        dispatch({
+          type: t.FETCH_AUTHORSHIPS_REJECTED,
+          payload: err,
+        })
+      });
+  };
+};
+
 export const createArticle = values => {
   return dispatch => {
     dispatch({

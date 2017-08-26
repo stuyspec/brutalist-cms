@@ -6,14 +6,10 @@ import { createSection } from "../actions";
 import CreateSectionForm from "./CreateSectionForm";
 
 const CreateSectionPage = ({ createSection }) => {
-  const handleSubmit = values => {
-    createSection( values );
-  };
-
   return (
     <div>
       <h3>Create a Section</h3>
-      <CreateSectionForm onSubmit={ handleSubmit }/>
+      <CreateSectionForm onSubmit={ createSection }/>
     </div>
   )
 };
