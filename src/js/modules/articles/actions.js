@@ -1,3 +1,5 @@
+// TODO: delete authorships when a user is deleted.
+
 import axios from "axios";
 import { STUY_SPEC_API_URL, STUY_SPEC_API_HEADERS } from "../../constants";
 import * as t from "./actionTypes";
