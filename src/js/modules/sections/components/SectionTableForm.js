@@ -21,15 +21,22 @@ class SectionTableForm extends Component {
     const {
       classes,
       handleSubmit,
+      pristine,
+      reset,
       sections,
+      submitting,
     } = this.props;
     const columns = [ 'name', 'description', 'slug' ];
     return (
       <form onSubmit={ handleSubmit }>
         <Field name="bulkAction" component="select">
           <option/>
+          <option value="delete">delete</option>
         </Field>
-        <button type="submit" disabled={ true }>bulk actions not functional</button>
+        <button type="submit" disabled={ pristine || submitting }>Submit</button>
+        <button type="button" disabled={ pristine || submitting } onClick={ reset }>
+          Clear Values
+        </button>
         <table>
           <thead>
           <tr>
@@ -45,7 +52,7 @@ class SectionTableForm extends Component {
               return (
                 <tr key={ section.id }>
                   <td key={ -1 }>
-                    <Field name={ section.id.toString() }
+                    <Field name={ `sections.${section.slug}` }
                            component="input"
                            type="checkbox"/>
                   </td>
@@ -89,5 +96,5 @@ const SmartSectionTableForm = connect(
 )(injectSheet(styles)(SectionTableForm));
 
 export default reduxForm({
-  form: 'sectionTableForm',
+  form: 'sectionTable',
 })(SmartSectionTableForm);

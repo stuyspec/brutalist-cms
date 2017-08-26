@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { Field, reduxForm } from "redux-form";
+import injectSheet from "react-jss";
 
 import { fetchSections } from "../actions";
 import { getSectionsSelectOptions } from "../selectors";
@@ -10,6 +11,14 @@ import {
   renderInput,
   renderDropdown
 } from "../../core/components/FormInputs";
+
+const styles = {
+  tableBody: {
+    '& tr td:first-child': {
+      width: '104px',
+    },
+  },
+};
 
 const validate = values => {
   const errors = {}
@@ -73,7 +82,7 @@ class CreateSectionForm extends Component {
       </form>
     );
   }
-};
+}
 
 const mapStateToProps = state => ({
   sectionsSelectOptions: getSectionsSelectOptions(state),
@@ -83,7 +92,12 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators({ fetchSections }, dispatch);
 };
 
+const SmartCreateSectionFrom = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(injectSheet(styles)(CreateSectionForm));
+
 export default reduxForm({
   form: 'createSection',
   validate,
-})(connect(mapStateToProps, mapDispatchToProps)(CreateSectionForm));
+})(SmartCreateSectionFrom);

@@ -1,10 +1,17 @@
 import React from "react";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
 
+import { deleteSection } from "../actions";
 import SectionTableForm from "./SectionTableForm";
 
-const SectionTable = () => {
+const SectionTable = ({ deleteSection }) => {
   const handleSubmit = values => {
-    console.log(values);
+    if (values.bulkAction === 'delete') {
+      Object.keys(values.sections).map(slug => {
+        deleteSection({ slug: slug });
+      });
+    }
   };
   return (
     <div>
@@ -13,4 +20,8 @@ const SectionTable = () => {
   );
 };
 
-export default SectionTable;
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators({ deleteSection }, dispatch);
+};
+
+export default connect(null, mapDispatchToProps)(SectionTable);

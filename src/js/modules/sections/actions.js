@@ -22,7 +22,9 @@ export const fetchSections = () => {
 };
 
 export const createSection = values => {
-  values.parentId = values.parentId.value;
+  if (values.parentId) {
+    values.parentId = values.parentId.value;
+  }
   return dispatch => {
     dispatch({
       type: t.CREATE_SECTION_PENDING,
@@ -38,6 +40,28 @@ export const createSection = values => {
       .catch(err => {
         dispatch({
           type: t.CREATE_SECTION_REJECTED,
+          payload: err,
+        })
+      });
+  };
+};
+
+export const deleteSection = values => {
+  return dispatch => {
+    dispatch({
+      type: t.DELETE_SECTION_PENDING,
+      payload: values,
+    });
+    axios.delete(`${STUY_SPEC_API_URL}/sections/${values.slug}`, STUY_SPEC_API_HEADERS)
+      .then(response => {
+        dispatch({
+          type: t.DELETE_SECTION_FULFILLED,
+          payload: response,
+        });
+      })
+      .catch(err => {
+        dispatch({
+          type: t.DELETE_SECTION_REJECTED,
           payload: err,
         })
       });
