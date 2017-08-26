@@ -9,11 +9,17 @@ import { fetchArticles } from "../actions";
 import { fetchSections } from "../../sections/actions";
 
 const styles = {
-  tableBody: {
-    '& td:nth-child(n+3):nth-child(-n+5)': {
+  articleRow: {
+    '& td:nth-child(1), td:nth-child(2)': {
+      width: '20px',
+    },
+    '& td:nth-child(4), td:nth-child(5), td:nth-child(6)': {
       // selects all td after the third and before the fifth, inclusively.
       width: '48px',
     },
+    '& td:nth-child(7)': {
+      width: '194px',
+    }
   }
 };
 
@@ -28,15 +34,22 @@ class ArticleTableForm extends Component {
       articles,
       classes,
       handleSubmit,
+      pristine,
+      reset,
       sections,
+      submitting,
     } = this.props;
-    const columns = [ 'title', 'volume', 'issue', 'isDraft', 'updatedAt', 'section' ];
+    const columns = [ 'id', 'title', 'volume', 'issue', 'isDraft', 'updatedAt', 'section' ];
     return (
       <form onSubmit={ handleSubmit }>
         <Field name="bulkAction" component="select">
           <option/>
+          <option value="delete">delete</option>
         </Field>
-        <button type="submit" disabled={ true }>bulk actions not functional</button>
+        <button type="submit" disabled={ pristine || submitting }>Submit</button>
+        <button type="button" disabled={ pristine || submitting } onClick={ reset }>
+          Clear Values
+        </button>
         <table>
           <thead>
           <tr>
@@ -50,9 +63,9 @@ class ArticleTableForm extends Component {
           {
             Object.values(articles).map(article => {
               return (
-                <tr key={ article.id }>
+                <tr key={ article.id } className={ classes.articleRow }>
                   <td key={ -1 }>
-                    <Field name={ article.id.toString() }
+                    <Field name={ `articles.${article.slug}` }
                            component="input"
                            type="checkbox"/>
                   </td>
@@ -116,5 +129,5 @@ const SmartArticleTableForm = connect(
 )(injectSheet(styles)(ArticleTableForm));
 
 export default reduxForm({
-  form: 'articleTableForm',
+  form: 'articleTable',
 })(SmartArticleTableForm);

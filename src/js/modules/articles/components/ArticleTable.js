@@ -1,10 +1,17 @@
 import React from "react";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
 
+import { deleteArticle } from "../actions";
 import ArticleTableForm from "./ArticleTableForm";
 
-const ArticleTable = () => {
+const ArticleTable = ({ deleteArticle }) => {
   const handleSubmit = values => {
-    console.log(values);
+    if (values.bulkAction === 'delete') {
+      Object.keys(values.articles).map(slug => {
+        deleteArticle({ slug: slug });
+      });
+    }
   };
   return (
     <div>
@@ -13,4 +20,8 @@ const ArticleTable = () => {
   );
 };
 
-export default ArticleTable;
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators({ deleteArticle }, dispatch);
+};
+
+export default connect(null, mapDispatchToProps)(ArticleTable);

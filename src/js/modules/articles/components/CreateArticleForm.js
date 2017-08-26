@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { Field, reduxForm } from "redux-form";
+import injectSheet from "react-jss";
 
 import { fetchSections } from "../../sections/actions"
 import { getSectionsSelectOptions } from "../../sections/selectors";
@@ -12,6 +13,14 @@ import {
   renderTextArea,
   renderDropdown,
 } from "../../core/components/FormInputs";
+
+const styles = {
+  tableBody: {
+    '& tr td:first-child': {
+      width: '104px',
+    },
+  },
+};
 
 const validate = values => {
   const errors = {}
@@ -37,17 +46,18 @@ class CreateArticleForm extends Component {
 
   render() {
     const {
+      classes,
       handleSubmit,
-      sectionsSelectOptions,
-      usersSelectOptions,
       pristine,
       reset,
-      submitting
+      sectionsSelectOptions,
+      submitting,
+      usersSelectOptions,
     } = this.props;
     return (
       <form onSubmit={ handleSubmit }>
         <table>
-          <tbody>
+          <tbody className={ classes.tableBody }>
           <tr>
             <td>Title</td>
             <td>
@@ -104,7 +114,7 @@ class CreateArticleForm extends Component {
       </form>
     );
   }
-};
+}
 
 const mapStateToProps = state => ({
   sectionsSelectOptions: getSectionsSelectOptions(state),
@@ -115,7 +125,12 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators({ fetchSections }, dispatch);
 };
 
+const SmartCreateArticleFrom = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(injectSheet(styles)(CreateArticleForm));
+
 export default reduxForm({
   form: 'createArticle',
   validate,
-})(connect(mapStateToProps, mapDispatchToProps)(CreateArticleForm));
+})(SmartCreateArticleFrom);

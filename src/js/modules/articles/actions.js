@@ -52,6 +52,24 @@ export const createArticle = values => {
   };
 };
 
-export const deleteArticles = values => {
-
-}
+export const deleteArticle = values => {
+  return dispatch => {
+    dispatch({
+      type: t.DELETE_ARTICLE_PENDING,
+      payload: values,
+    });
+    axios.delete(`${STUY_SPEC_API_URL}/articles/${values.slug}`, STUY_SPEC_API_HEADERS)
+      .then(response => {
+        dispatch({
+          type: t.DELETE_ARTICLE_FULFILLED,
+          payload: response,
+        });
+      })
+      .catch(err => {
+        dispatch({
+          type: t.DELETE_ARTICLE_REJECTED,
+          payload: err,
+        })
+      });
+  };
+};
