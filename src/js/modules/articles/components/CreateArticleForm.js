@@ -5,6 +5,7 @@ import { Field, reduxForm } from "redux-form";
 import injectSheet from "react-jss";
 
 import { fetchSections } from "../../sections/actions"
+import { fetchUsers } from "../../users/actions";
 import { getSectionsSelectOptions } from "../../sections/selectors";
 import { getUsersSelectOptions } from "../../users/selectors";
 
@@ -12,6 +13,7 @@ import {
   renderInput,
   renderTextArea,
   renderDropdown,
+  FileInput,
 } from "../../core/components/FormInputs";
 
 const styles = {
@@ -23,9 +25,15 @@ const styles = {
 };
 
 const validate = values => {
-  const errors = {}
+  const errors = {};
   if (!values.title) {
     errors.title = 'Required';
+  }
+  if (!values.users || values.users.length === 0) {
+    errors.users = 'Required';
+  }
+  if (!values.sections || values.sections.length === 0) {
+    errors.sections = 'Required';
   }
   if (!values.content) {
     errors.content = 'Required';
@@ -36,12 +44,36 @@ const validate = values => {
   if (!values.volume) {
     errors.volume = 'Required';
   }
+  if (values.poster && !values.caption) {
+    errors.caption = 'Required';
+  }
+  if (!values.mediaType) {
+    errors.mediaType = 'Required';
+  }
+  if (!values.mediaTitle) {
+    errors.mediaTitle = 'Required';
+  }
+  if (!values.credits) {
+    errors.credits = 'Required';
+  }
+  if (!values.creator) {
+    errors.creator = 'Required';
+  }
   return errors;
 };
 
 class CreateArticleForm extends Component {
+  constructor(props) {
+    super(props);
+  }
+
   componentDidMount() {
+    this.refresh();
+  }
+
+  refresh = () => {
     this.props.fetchSections();
+    this.props.fetchUsers();
   }
 
   render() {
@@ -56,6 +88,7 @@ class CreateArticleForm extends Component {
     } = this.props;
     return (
       <form onSubmit={ handleSubmit }>
+        <button onClick={ () => this.refresh() }>refresh</button>
         <table>
           <tbody className={ classes.tableBody }>
           <tr>
@@ -102,6 +135,53 @@ class CreateArticleForm extends Component {
           </tr>
           </tbody>
         </table>
+        <h3>Featured Media:</h3>
+        <table>
+          <tbody>
+          <tr>
+            <td>Upload</td>
+            <td><Field type="file" name="poster" component={ FileInput }/></td>
+          </tr>
+          <tr>
+            <td>Media Title (also used as alt text)</td>
+            <td>
+              <Field name="mediaTitle" type="text" component={ renderInput }
+                     label="Media Title"/>
+            </td>
+          </tr>
+          <tr>
+            <td>Caption</td>
+            <td>
+              <Field name="caption" type="text" component={ renderInput }
+                     label="Caption"/>
+            </td>
+          </tr>
+          <tr>
+            <td>URL</td>
+            <td>
+              <Field name="url" type="text" component={ renderInput }
+                     label="URL"/>
+            </td>
+          </tr>
+          <tr>
+            <td>Media Type</td>
+            <td>
+              <Field name="mediaType" component="select">
+                <option />
+                <option value="photograph">Photo</option>
+                <option value="illustration">Art</option>
+              </Field>
+            </td>
+          </tr>
+          <tr>
+            <td>Users</td>
+            <td>
+              <Field name="creator" options={ usersSelectOptions }
+                     component={ renderDropdown }/>
+            </td>
+          </tr>
+          </tbody>
+        </table>
         <div>
           <button type="submit" disabled={ submitting }>
             Submit
@@ -122,7 +202,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ fetchSections }, dispatch);
+  return bindActionCreators({ fetchSections, fetchUsers }, dispatch);
 };
 
 const SmartCreateArticleFrom = connect(
