@@ -10,6 +10,8 @@ const PageLayout = ({ children }) => {
           <li><Link to="/articles/new">new article</Link></li>
           <li><Link to="/sections">sections table</Link></li>
           <li><Link to="/sections/new">new section</Link></li>
+          <li><Link to="/users">users table</Link></li>
+          <li><Link to="/users/new">new user</Link></li>
         </ul>
         { children }
       </div>

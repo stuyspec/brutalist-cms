@@ -8,6 +8,7 @@ import ConnectedRouter from "react-router-redux/ConnectedRouter";
 import { HomePage, PageLayout } from "./core/components";
 import { ArticleTable, CreateArticlePage } from "./articles/components";
 import { SectionTable, CreateSectionPage } from "./sections/components";
+import { UserTable, CreateUserPage } from "./users/components";
 
 import { fetchArticles } from "./articles/actions";
 import { fetchSections } from "./sections/actions";
@@ -28,6 +29,8 @@ class RoutingApp extends Component {
             <Route exact path='/articles/new' component={ CreateArticlePage }/>
             <Route exact path='/sections' component={ SectionTable }/>
             <Route exact path='/sections/new' component={ CreateSectionPage }/>
+            <Route exact path='/users' component={ UserTable }/>
+            <Route exact path='/users/new' component={ CreateUserPage }/>
           </Switch>
         </PageLayout>
       </ConnectedRouter>

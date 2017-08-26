@@ -5,19 +5,19 @@ import { Link } from "react-router-dom";
 import injectSheet from "react-jss";
 import { Field, reduxForm } from "redux-form";
 
-import { fetchArticles } from "../actions";
+import { fetchArticles, fetchAuthorships } from "../actions";
 import { fetchSections } from "../../sections/actions";
+import { fetchUsers } from "../../users/actions";
 
 const styles = {
   articleRow: {
     '& td:nth-child(1), td:nth-child(2)': {
       width: '20px',
     },
-    '& td:nth-child(4), td:nth-child(5), td:nth-child(6)': {
-      // selects all td after the third and before the fifth, inclusively.
+    '& td:nth-child(5), td:nth-child(6), td:nth-child(7)': {
       width: '48px',
     },
-    '& td:nth-child(7)': {
+    '& td:nth-child(8)': {
       width: '194px',
     }
   }
@@ -25,21 +25,25 @@ const styles = {
 
 class ArticleTableForm extends Component {
   componentDidMount() {
-    this.props.fetchSections();
     this.props.fetchArticles();
+    this.props.fetchAuthorships();
+    this.props.fetchSections();
+    this.props.fetchUsers();
   }
 
   render() {
     const {
       articles,
+      authorships,
       classes,
       handleSubmit,
       pristine,
       reset,
       sections,
       submitting,
+      users,
     } = this.props;
-    const columns = [ 'id', 'title', 'volume', 'issue', 'isDraft', 'updatedAt', 'section' ];
+    const columns = [ 'id', 'title', 'contributors', 'volume', 'issue', 'isDraft', 'updatedAt', 'section' ];
     return (
       <form onSubmit={ handleSubmit }>
         <Field name="bulkAction" component="select">
@@ -80,6 +84,19 @@ class ArticleTableForm extends Component {
                           </Link>
                         );
                       }
+                      else if (col === 'contributors') {
+                        content = [];
+                        authorships.map(authorship => {
+                          if (authorship.articleId === article.id) {
+                            const user = users[ authorship.userId ];
+                            content.push(
+                              <Link key={ user.id } to={ `/users/${ user.id }` }>
+                                { user.firstName } { user.lastName }
+                              </Link>
+                            );
+                          }
+                        });
+                      }
                       else if (col === 'section') {
                         // sections are linked to the section page.
                         const section = sections[ article.sectionId ];
@@ -115,12 +132,17 @@ class ArticleTableForm extends Component {
 }
 
 const mapStateToProps = state => ({
-  sections: state.sections.sections,
   articles: state.articles.articles,
+  authorships: state.articles.authorships,
+  sections: state.sections.sections,
+  users: state.users.users,
 });
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ fetchArticles, fetchSections }, dispatch);
+  return bindActionCreators(
+    { fetchArticles, fetchAuthorships, fetchSections, fetchUsers },
+    dispatch
+  );
 };
 
 const SmartArticleTableForm = connect(

@@ -6,14 +6,10 @@ import { createArticle } from "../actions";
 import CreateArticleForm from "./CreateArticleForm";
 
 const CreateArticlePage = ({ createArticle }) => {
-  const handleSubmit = values => {
-    createArticle( values );
-  };
-
   return (
     <div>
       <h3>Create an Article</h3>
-      <CreateArticleForm onSubmit={ handleSubmit }/>
+      <CreateArticleForm onSubmit={ createArticle }/>
     </div>
   )
 };
