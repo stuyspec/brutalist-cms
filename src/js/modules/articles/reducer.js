@@ -19,8 +19,14 @@ export default reducer = (state = { ...initialState }, action) => {
         }, {}),
       };
     }
+    case FETCH_AUTHORSHIPS_FULFILLED: {
+      return {
+        ...state,
+        authorships: action.payload,
+      };
+    }
     default:
       break;
   }
   return state;
-}
+};

@@ -27,12 +27,30 @@ export const createUser = values => {
       type: t.CREATE_USER_PENDING,
       payload: values,
     });
-    axios.post(`${STUY_SPEC_API_URL}/users`, values, STUY_SPEC_API_HEADERS)
+    axios.post(`${STUY_SPEC_API_URL}/auth/`, values, STUY_SPEC_API_HEADERS)
       .then(response => {
         dispatch({
           type: t.CREATE_USER_FULFILLED,
           payload: response,
         });
+        const user = response.data.data;
+        dispatch({
+          type: t.UPDATE_USER_PENDING,
+          payload: user,
+        });
+        axios.put(`${STUY_SPEC_API_URL}/users/${user.id}`, values, STUY_SPEC_API_HEADERS)
+          .then(response => {
+            dispatch({
+              type: t.UPDATE_USER_FULFILLED,
+              payload: response,
+            });
+          })
+          .catch(err => {
+            dispatch({
+              type: t.UPDATE_USER_REJECTED,
+              payload: err,
+            });
+          });
       })
       .catch(err => {
         dispatch({

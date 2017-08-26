@@ -33,7 +33,7 @@ class UserTableForm extends Component {
       reset,
       submitting,
     } = this.props;
-    const columns = [ 'id', 'username', 'firstName', 'lastName', 'email', 'description' ];
+    const columns = [ 'id', 'firstName', 'lastName', 'email', 'description' ];
     return (
       <form onSubmit={ handleSubmit }>
         <Field name="bulkAction" component="select">
@@ -66,11 +66,11 @@ class UserTableForm extends Component {
                   {
                     columns.map((col, index) => {
                       let content = user[ col ];
-                      if (col === 'username') {
+                      if (col === 'email') {
                         // users are linked to the user page.
                         content = (
                           <Link to={ `/users/${ user.id }` }>
-                            { user.title }
+                            { user.email }
                           </Link>
                         );
                       }

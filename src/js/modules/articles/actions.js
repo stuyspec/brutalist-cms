@@ -51,12 +51,32 @@ export const createArticle = values => {
      * values.sectionId = values.section.value;
      * delete values.section;
      */
-    axios.post(
-      `${STUY_SPEC_API_URL}/articles`,
-      values,
-      STUY_SPEC_API_HEADERS
-    )
+    axios.post(`${STUY_SPEC_API_URL}/articles`, values, STUY_SPEC_API_HEADERS)
       .then(response => {
+        const article = response.data;
+        values.users.map(user => {
+          dispatch({
+            type: t.CREATE_AUTHORSHIP_PENDING,
+            payload: user,
+          });
+          axios.post(
+            `${STUY_SPEC_API_URL}/authorships`,
+            { articleId: article.id, userId: user.value },
+            STUY_SPEC_API_HEADERS
+          )
+            .then(response => {
+              dispatch({
+                type: t.CREATE_AUTHORSHIP_FULFILLED,
+                payload: response,
+              });
+            })
+            .catch(err => {
+              dispatch({
+                type: t.CREATE_ARTICLE_REJECTED,
+                payload: err,
+              });
+            });
+        });
         dispatch({
           type: t.CREATE_ARTICLE_FULFILLED,
           payload: response,
