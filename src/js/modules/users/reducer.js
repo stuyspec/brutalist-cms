@@ -12,6 +12,8 @@ const initialState = {
   isFetched: false,
   users: {},
   errors: [],
+  roles: {},
+  uesrRoles: [],
 };
 
 export default reducer = (state = { ...initialState }, action) => {
