@@ -1,7 +1,6 @@
-dist/src/*.js
-dist/build/*.js
-dist/build/**
+dist/dev/*.js
 node_modules
 .gitignore
 .idea/
 dist/prod/
+.DS_STORE
