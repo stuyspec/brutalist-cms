@@ -48,11 +48,8 @@ export const createArticle = values => {
       type: t.CREATE_ARTICLE_PENDING,
       payload: values,
     });
-    values.section = values.section.value;
-    /* TODO: put this code in when section becomes section_id on Rails POST.
-     * values.sectionId = values.section.value;
-     * delete values.section;
-     */
+    values.sectionId = values.section.value;
+    delete values.section;
     axios.post(`${STUY_SPEC_API_URL}/articles`, values, STUY_SPEC_API_HEADERS)
       .then(response => {
         const article = response.data;
