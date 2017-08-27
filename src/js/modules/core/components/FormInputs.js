@@ -42,4 +42,20 @@ export const renderDropdown = ({ input, options, name, multi }) => (
     multi={ multi }
     clearable={ false }
   />
-)
+);
+
+export class FileInput extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  onChange = (e) => {
+    const { input: { onChange } } = this.props;
+    onChange(e.target.files[0]);
+  }
+
+  render() {
+    const { input: { value } } = this.props;
+    return <input type="file" onChange={(e) => this.onChange(e)}/>;
+  }
+}

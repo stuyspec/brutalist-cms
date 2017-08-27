@@ -52,7 +52,34 @@ export const createArticle = values => {
     delete values.section;
     axios.post(`${STUY_SPEC_API_URL}/articles`, values, STUY_SPEC_API_HEADERS)
       .then(response => {
+        dispatch({
+          type: t.CREATE_ARTICLE_FULFILLED,
+          payload: response,
+        });
         const article = response.data;
+        // featured media
+        dispatch({
+          type: t.CREATE_ARTICLE_MEDIA_PENDING,
+          payload: values,
+        });
+        axios.post(
+          `${STUY_SPEC_API_URL}/media`,
+          { ...values, isFeatured: true, userId: values.creator.value },
+          STUY_SPEC_API_HEADERS
+        )
+          .then(response => {
+            dispatch({
+              type: t.CREATE_ARTICLE_MEDIA_FULFILLED,
+              payload: response,
+            });
+          })
+          .catch(err => {
+            dispatch({
+              type: t.CREATE_ARTICLE_MEDIA_REJECTED,
+              payload: err,
+            });
+          });
+
         values.users.map(user => {
           dispatch({
             type: t.CREATE_AUTHORSHIP_PENDING,
@@ -68,18 +95,16 @@ export const createArticle = values => {
                 type: t.CREATE_AUTHORSHIP_FULFILLED,
                 payload: response,
               });
+
             })
             .catch(err => {
               dispatch({
-                type: t.CREATE_ARTICLE_REJECTED,
+                type: t.CREATE_AUTHORSHIP_REJECTED,
                 payload: err,
               });
             });
         });
-        dispatch({
-          type: t.CREATE_ARTICLE_FULFILLED,
-          payload: response,
-        });
+
       })
       .catch(err => {
         dispatch({

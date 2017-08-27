@@ -19,12 +19,16 @@ const styles = {
 };
 
 class SectionTableForm extends Component {
+  constructor(props) {
+    super(props);
+  }
+
   componentDidMount() {
     this.refresh();
   }
 
   refresh = () => {
-    this.props.fetchSection();
+    this.props.fetchSections();
   }
 
   render() {
@@ -39,7 +43,7 @@ class SectionTableForm extends Component {
     const columns = [ 'id', 'name', 'slug', 'description' ];
     return (
       <div>
-        <button onClick={ () => refresh }>refresh</button>
+        <button onClick={ () => this.refresh() }>refresh</button>
         <form onSubmit={ handleSubmit }>
           <Field name="bulkAction" component="select">
             <option/>
