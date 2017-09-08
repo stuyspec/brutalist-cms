@@ -101,7 +101,7 @@ const CreateUserForm = ({
       <div>
         {
           errors.length > 0 && errors.map((error, index) => {
-            return <p className={ classes.errorMessage } key={ index }>error</p>;
+            return <p className={ classes.errorMessage } key={ index }>{ error }</p>;
           })
         }
       </div>
